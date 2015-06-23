@@ -1,37 +1,33 @@
 'use strict';
 
+var Database = require('./database');
+
 class Webshop {
     constructor() {
-        var mysql = require('mysql');
-
-        this.connection = mysql.createConnection({
-          host: 'localhost',
-          database: 'tdd_test',
-          user: 'root',
-          //password : 's3kreee7'
-        });
-
-        this.connection.connect();
+        this.db = new Database();
     }
 
     destruct() {
-        this.connection.end();
-    }
-
-    __query(sql, callback) {
-        this.connection.query(sql, callback);
+        this.db.destruct();
     }
 
     getAllProducts() {
-        // TODO
+        return this.db.getAllProducts();
     }
 
     getProductById(id) {
-        // TODO
+        return this.db.getProductById(id);
     }
 
     getTotalPrice() {
-        // TODO
+        var products = this.getAllProducts(),
+            price = 0;
+
+        for (var product of products) {
+            price = price + (product.amount * product.price);
+        }
+
+        return price;
     }
 }
 
@@ -42,3 +38,5 @@ class Webshop {
     console.log('Product #2: ', shop.getProductById(2));
     console.log('Total price: ', shop.getTotalPrice());
 })();
+
+module.exports = Webshop;
